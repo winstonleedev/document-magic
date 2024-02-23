@@ -9,8 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.github.javaparser.ParseResult;
-import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.comments.JavadocComment;
@@ -62,13 +60,8 @@ public class CodeBot {
 
   public static String commentOnMethod(String codeBlock) {
 
-    String prompt = """
-        You are a senior developer at a large financial corporation.
-        You are in charge of writing documentation for a project.
-        This project test the performance of chat language models.
-        Given the below Java method delimited by \n<code>\n
-        Write Javadoc comment for the given method""";
 
+    String prompt = Config.methodPrompt;
     String answer = "";
     while (answer.isEmpty()) {
       answer = model.generate(String.format("%s\n<code>\n%s\n<code>\n", prompt, codeBlock));
@@ -90,13 +83,8 @@ public class CodeBot {
 
   public static String commentOnClass(String codeBlock) {
 
-    String prompt = """
-        You are a senior developer at a large financial corporation.
-        You are in charge of writing documentation for a project.
-        This project test the performance of chat language models.
-        Given the below Java class with the list of methods delimited by \n<code>\n
-        Write Javadoc comment for the given class""";
 
+    String prompt = Config.classPrompt;
     String answer = "";
     while (answer.isEmpty()) {
       answer = model.generate(String.format("%s\n<code>\n%s\n<code>\n", prompt, codeBlock));
