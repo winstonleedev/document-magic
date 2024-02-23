@@ -17,6 +17,7 @@ import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.utils.Log;
 import com.github.javaparser.utils.SourceRoot;
+import com.github.javaparser.utils.SourceRoot.Callback;
 
 public class CodeBot {
 
@@ -173,18 +174,19 @@ public class CodeBot {
     // with src/main/resources appended.
     SourceRoot sourceRoot = new SourceRoot(Paths.get(args[0]));
 
-    // Our sample is in the root of this directory, so no package name.
-    try {
-      List<ParseResult<CompilationUnit>> result = sourceRoot.tryToParse();
-
-      for (ParseResult<CompilationUnit> parseResult : result) {
-        var rr = parseResult.getResult();
-        if (rr.isEmpty()) {
-          continue;
-        }
-
+    Callback callback = (localPath, absolutePath, parseResult) -> {
+      // Handle the event here
+      System.out.println("Received event " + localPath);
+      var rr = parseResult.getResult();
+      if (!rr.isEmpty()) {
         rr.get().accept(new MethodVisitor(), null);
       }
+      return Callback.Result.SAVE;
+    };
+
+    // Our sample is in the root of this directory, so no package name.
+    try {
+      sourceRoot.parse("", callback);
     } catch (IOException e) {
       // Error parsing
       Log.error(e);
