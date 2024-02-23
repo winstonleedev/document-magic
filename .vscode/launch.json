@@ -15,7 +15,11 @@
       "name": "CodeBot",
       "request": "launch",
       "mainClass": "CodeBot",
-      "projectName": "ollama-examples"
+      "projectName": "ollama-examples",
+      "args": [
+        "/Users/winston/Code/kisv-chart/src",
+        "/Users/winston/Code/document-result/kisv-chart"
+      ]
     }
   ]
 }

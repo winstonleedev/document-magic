@@ -24,7 +24,7 @@ public class CodeBot {
   static String HOST = "localhost";
   static Integer PORT = 11434;
   static String url = String.format("http://%s:%d/api/generate/", HOST, PORT);
-  static boolean isDebug = true;
+  static boolean isDebug = false;
 
   static ChatLanguageModel model = OllamaChatModel.builder()
       .baseUrl(url)
@@ -183,7 +183,7 @@ public class CodeBot {
     // In this case the root directory is found by taking the root from the current
     // Maven module,
     // with src/main/resources appended.
-    SourceRoot sourceRoot = new SourceRoot(Paths.get("/Users/winston/Code/javaparser-maven-sample/src/main/java"));
+    SourceRoot sourceRoot = new SourceRoot(Paths.get(args[0]));
 
     // Our sample is in the root of this directory, so no package name.
     try {
@@ -203,6 +203,6 @@ public class CodeBot {
     }
 
     // This saves all the files we just read to an output directory.
-    sourceRoot.saveAll(Paths.get("/Users/winston/Code/javaparser-maven-sample/src/main-docs/java/"));
+    sourceRoot.saveAll(Paths.get(args[1]));
   }
 }
