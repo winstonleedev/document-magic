@@ -53,6 +53,12 @@ public class CodeBot {
     return String.join("\n", resultLines);
   }
 
+  public static void doLog(String message) {
+    if (isDebug) {
+      doLog(message);
+    }
+  }
+
   public static String commentOnMethod(String codeBlock) {
 
     String prompt = """
@@ -66,19 +72,16 @@ public class CodeBot {
     while (answer.isEmpty()) {
       answer = model.generate(String.format("%s\n<code>\n%s\n<code>\n", prompt, codeBlock));
 
-      if (isDebug) {
-        System.out.println("Result of commentCode:\n" + answer);
-      }
+      doLog("Result of commentCode:\n" + answer);
 
       answer = extractCommentBlock(answer);
-      if (isDebug) {
-        System.out.println("Result of extractComments:\n" + answer);
-      }
+
+      doLog("Result of extractComments:\n" + answer);
 
       answer = extractCommentText(answer);
-      if (isDebug) {
-        System.out.println("Result of extractCommentText:\n" + answer);
-      }
+
+      doLog("Result of extractCommentText:\n" + answer);
+
     }
 
     return answer;
@@ -97,19 +100,14 @@ public class CodeBot {
     while (answer.isEmpty()) {
       answer = model.generate(String.format("%s\n<code>\n%s\n<code>\n", prompt, codeBlock));
 
-      if (isDebug) {
-        System.out.println("Result of commentCode:\n" + answer);
-      }
+      doLog("Result of commentCode:\n" + answer);
 
       answer = extractCommentBlock(answer);
-      if (isDebug) {
-        System.out.println("Result of extractComments:\n" + answer);
-      }
+      doLog("Result of extractComments:\n" + answer);
 
       answer = extractCommentText(answer);
-      if (isDebug) {
-        System.out.println("Result of extractCommentText:\n" + answer);
-      }
+      doLog("Result of extractCommentText:\n" + answer);
+
     }
 
     return answer;
@@ -122,23 +120,20 @@ public class CodeBot {
 
     @Override
     public void visit(ClassOrInterfaceDeclaration n, Void arg) {
-      if (isDebug) {
-        System.out.println("Processing class: " + n.getName());
-      }
+      doLog("Processing class: " + n.getName());
 
       // For methods without Javadoc
       if (n.getJavadocComment().isEmpty()) {
         List<MethodDeclaration> methodList = n.getMethods();
         String methods = methodList
-          .stream()
-          .map(MethodDeclaration::getDeclarationAsString)
-          .collect(Collectors.joining("\n"));
+            .stream()
+            .map(MethodDeclaration::getDeclarationAsString)
+            .collect(Collectors.joining("\n"));
 
         String javadoc = commentOnClass(methods);
         n.setComment(new JavadocComment(javadoc).parse().toComment());
-        if (isDebug) {
-          System.out.println("Produced Javadoc:\n" + n.getComment().toString());
-        }
+        doLog("Produced Javadoc:\n" + n.getComment().toString());
+
       }
       super.visit(n, arg);
     }
@@ -148,27 +143,20 @@ public class CodeBot {
       // here you can access the attributes of the method.
       // this method will be called for all methods in this
       // CompilationUnit, including inner class methods
-      if (isDebug) {
-        System.out.println("Processing method: " + method.getName());
-      }
+      doLog("Processing method: " + method.getName());
 
       // For methods without Javadoc
       if (method.getJavadocComment().isEmpty() && method.getBody().isPresent()) {
         String declaration = method.getDeclarationAsString();
-        if (isDebug) {
-          System.out.println("Method declaration:\n" + declaration);
-        }
+        doLog("Method declaration:\n" + declaration);
 
         String body = method.getBody().get().toString();
-        if (isDebug) {
-          System.out.println("Method body:\n" + body);
-        }
+        doLog("Method body:\n" + body);
 
         String javadoc = commentOnMethod(String.format("%s\n%s", declaration, body));
         method.setComment(new JavadocComment(javadoc).parse().toComment());
-        if (isDebug) {
-          System.out.println("Produced Javadoc:\n" + method.getComment().toString());
-        }
+        doLog("Produced Javadoc:\n" + method.getComment().toString());
+
       }
       super.visit(method, arg);
     }
@@ -198,8 +186,8 @@ public class CodeBot {
         rr.get().accept(new MethodVisitor(), null);
       }
     } catch (IOException e) {
-      // TError parsing
-      e.printStackTrace();
+      // Error parsing
+      Log.error(e);
     }
 
     // This saves all the files we just read to an output directory.
