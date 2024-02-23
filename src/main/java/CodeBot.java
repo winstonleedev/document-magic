@@ -120,23 +120,23 @@ public class CodeBot {
   private static class MethodVisitor extends VoidVisitorAdapter<Void> {
 
     @Override
-    public void visit(ClassOrInterfaceDeclaration n, Void arg) {
-      doLog("Processing class: " + n.getName());
+    public void visit(ClassOrInterfaceDeclaration clazz, Void arg) {
+      doLog("Processing class: " + clazz.getName());
 
-      // For methods without Javadoc
-      if (n.getJavadocComment().isEmpty()) {
-        List<MethodDeclaration> methodList = n.getMethods();
+      // For classes without Javadoc
+      if (clazz.getJavadocComment().isEmpty()) {
+        List<MethodDeclaration> methodList = clazz.getMethods();
         String methods = methodList
             .stream()
             .map(MethodDeclaration::getDeclarationAsString)
             .collect(Collectors.joining("\n"));
 
         String javadoc = commentOnClass(methods);
-        n.setComment(new JavadocComment(javadoc).parse().toComment());
-        doLog("Produced Javadoc:\n" + n.getComment().toString());
+        clazz.setComment(new JavadocComment(javadoc).parse().toComment());
+        doLog("Produced Javadoc:\n" + clazz.getComment().toString());
 
       }
-      super.visit(n, arg);
+      super.visit(clazz, arg);
     }
 
     @Override
@@ -164,35 +164,22 @@ public class CodeBot {
   }
 
   public static void main(String[] args) {
-
     Log.setAdapter(new Log.StandardOutStandardErrorAdapter());
 
     // SourceRoot is a tool that read and writes Java files from packages on a
-    // certain root directory.
-    // In this case the root directory is found by taking the root from the current
-    // Maven module,
-    // with src/main/resources appended.
+    // certain root directory.o
     SourceRoot sourceRoot = new SourceRoot(Paths.get(args[0]));
 
     Callback callback = (localPath, absolutePath, parseResult) -> {
-      // Handle the event here
-      System.out.println("Received event " + localPath);
-      var rr = parseResult.getResult();
-      if (!rr.isEmpty()) {
-        rr.get().accept(new MethodVisitor(), null);
-      }
+      parseResult.getResult().ifPresent(cu -> cu.accept(new MethodVisitor(), null));
       return Callback.Result.SAVE;
     };
 
-    // Our sample is in the root of this directory, so no package name.
     try {
       sourceRoot.parse("", callback);
     } catch (IOException e) {
       // Error parsing
       Log.error(e);
     }
-
-    // This saves all the files we just read to an output directory.
-    sourceRoot.saveAll(Paths.get(args[1]));
   }
 }
