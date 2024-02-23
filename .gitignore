@@ -1,0 +1,25 @@
+# Ignore compiled class files
+*.class
+
+# Ignore log files
+log/*.log
+
+# Ignore temporary files
+temp/*
+
+# Ignore build artifacts
+build/
+
+# Ignore Eclipse metadata
+.settings/
+
+# Ignore IntelliJ IDEA metadata
+.idea/
+
+# Ignore Gradle metadata
+.gradle/
+
+# Ignore Maven metadata
+target/
+
+output/
