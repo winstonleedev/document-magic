@@ -46,7 +46,10 @@ public class CodeBot {
     for (int i = 1; i < lines.length - 1; i++) {
       String currentLine = lines[i];
       if (currentLine.length() >= 3) {
-        resultLines.add(lines[i].substring(2).trim());
+        resultLines.add(lines[i]
+            .substring(2) // Remove " *"
+            .replace("*/", "") // Remove accidental comment terminator
+            .trim()); // Remove extra whitespace
       }
     }
     return String.join("\n", resultLines);
