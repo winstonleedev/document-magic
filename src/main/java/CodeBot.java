@@ -45,7 +45,9 @@ public class CodeBot {
     List<String> resultLines = new ArrayList<>();
     for (int i = 1; i < lines.length - 1; i++) {
       // Remove accidental comment terminator
-      String currentLine = lines[i].replaceAll("\\*\\/", "").trim();
+      String currentLine = lines[i]
+        .replace("/* implementation */", "")
+        .replaceAll("\\*\\/", "").trim();
       if (currentLine.startsWith("*")) {
         resultLines.add(lines[i]
             .substring(1) // Remove "*"
