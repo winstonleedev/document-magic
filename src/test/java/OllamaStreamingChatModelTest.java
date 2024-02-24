@@ -4,8 +4,6 @@ import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import dev.langchain4j.model.output.Response;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.concurrent.CompletableFuture;

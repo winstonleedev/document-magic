@@ -44,14 +44,15 @@ public class CodeBot {
     String[] lines = input.split("\n");
     List<String> resultLines = new ArrayList<>();
     for (int i = 1; i < lines.length - 1; i++) {
-      String currentLine = lines[i].trim();
+      // Remove accidental comment terminator
+      String currentLine = lines[i].replaceAll("\\*\\/", "").trim();
       if (currentLine.startsWith("*")) {
         resultLines.add(lines[i]
-            .substring(1) // Remove " *"
-            .replace("*/", "") // Remove accidental comment terminator
+            .substring(1) // Remove "*"
             .trim()); // Remove extra whitespace
       } else {
-        resultLines.add(lines[i]);
+        resultLines.add(lines[i]
+            .trim());
       }
     }
     return String.join("\n", resultLines);
@@ -69,7 +70,7 @@ public class CodeBot {
     String prompt = Config.methodPrompt;
     String answer = "";
     while (answer.isEmpty()) {
-      answer = model.generate(String.format("%s\n<code>\n%s\n<code>\n", prompt, codeBlock));
+      answer = model.generate(String.format(prompt, codeBlock));
 
       doLog("Result of commentCode:\n" + answer);
 
@@ -92,8 +93,8 @@ public class CodeBot {
     String prompt = Config.classPrompt;
     String answer = "";
     while (answer.isEmpty()) {
-      answer = model.generate(String.format("%s\n<definition>\n%s\n<definition>\n<methods>\n%s\n<methods>\n", prompt, 
-          definition, methods));
+      answer = model.generate(String.format(
+          prompt, definition, methods));
 
       doLog("Result of commentCode:\n" + answer);
 

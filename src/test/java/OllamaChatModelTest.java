@@ -1,8 +1,6 @@
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
