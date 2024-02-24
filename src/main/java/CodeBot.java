@@ -44,12 +44,14 @@ public class CodeBot {
     String[] lines = input.split("\n");
     List<String> resultLines = new ArrayList<>();
     for (int i = 1; i < lines.length - 1; i++) {
-      String currentLine = lines[i];
-      if (currentLine.length() >= 3) {
+      String currentLine = lines[i].trim();
+      if (currentLine.startsWith("*")) {
         resultLines.add(lines[i]
-            .substring(2) // Remove " *"
+            .substring(1) // Remove " *"
             .replace("*/", "") // Remove accidental comment terminator
             .trim()); // Remove extra whitespace
+      } else {
+        resultLines.add(lines[i]);
       }
     }
     return String.join("\n", resultLines);
