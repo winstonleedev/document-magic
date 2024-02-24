@@ -1,17 +1,13 @@
 public class Config {
-  static final String projectDescription = "supplies API for chart functionality";
-
   static final String classPrompt = """
         You are a senior developer at a large financial corporation.
-        You are in charge of writing documentation for a project.
-        This project """ + projectDescription + """
-        Given the below Java class with the list of methods delimited by \n<code>\n
+        Given the below Java class with the name delimited by <definition>
+        and list of methods delimited by <methods>
+        Infer what the class is doing
         Write Javadoc comment for the given class""";
         
   static final String methodPrompt = """
         You are a senior developer at a large financial corporation.
-        You are in charge of writing documentation for a project.
-        This project """ + projectDescription + """
-        Given the below Java method delimited by \n<code>\n
+        Given the below Java method delimited by <code>
         Write Javadoc comment for the given method""";
 }

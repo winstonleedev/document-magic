@@ -1,6 +1,3 @@
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.ollama.OllamaChatModel;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,6 +13,9 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.utils.Log;
 import com.github.javaparser.utils.SourceRoot;
 import com.github.javaparser.utils.SourceRoot.Callback;
+
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 
 public class CodeBot {
 
@@ -84,13 +84,14 @@ public class CodeBot {
     return answer;
   }
 
-  public static String commentOnClass(String codeBlock) {
+  public static String commentOnClass(String definition, String methods) {
 
 
     String prompt = Config.classPrompt;
     String answer = "";
     while (answer.isEmpty()) {
-      answer = model.generate(String.format("%s\n<code>\n%s\n<code>\n", prompt, codeBlock));
+      answer = model.generate(String.format("%s\n<definition>\n%s\n<definition>\n<methods>\n%s\n<methods>\n", prompt, 
+          definition, methods));
 
       doLog("Result of commentCode:\n" + answer);
 
@@ -119,10 +120,10 @@ public class CodeBot {
         List<MethodDeclaration> methodList = clazz.getMethods();
         String methods = methodList
             .stream()
-            .map(MethodDeclaration::getDeclarationAsString)
+            .map(m -> m.getDeclarationAsString(false, true, true))
             .collect(Collectors.joining("\n"));
-
-        String javadoc = commentOnClass(methods);
+        
+        String javadoc = commentOnClass(clazz.getNameAsString(), methods);
         clazz.setComment(new JavadocComment(javadoc).parse().toComment());
         doLog("Produced Javadoc:\n" + clazz.getComment().toString());
 

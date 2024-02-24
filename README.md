@@ -4,6 +4,8 @@
 It automatically generates Javadoc for a Java project. It adds Javadoc to classes and methods that doesn't have them already.
 
 ## How to use
+- Install ollama on port 11434 (default ollama port)
+- Then run
 ```
 mvn package
 mvn run <target directory>
