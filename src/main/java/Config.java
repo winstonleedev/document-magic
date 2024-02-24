@@ -1,5 +1,5 @@
 public class Config {
-  static final String projectDescription = "test the performance of chat language models";
+  static final String projectDescription = "supplies API for chart functionality";
 
   static final String classPrompt = """
         You are a senior developer at a large financial corporation.
