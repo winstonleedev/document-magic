@@ -19,7 +19,7 @@ import dev.langchain4j.model.ollama.OllamaChatModel;
 
 public class CodeBot {
 
-  static String MODEL_NAME = "llama2:chat"; // try "mistral", "llama2", "codellama", "phi" or "tinyllama"
+  static String MODEL_NAME = "codellama"; // try "mistral", "llama2", "codellama", "phi" or "tinyllama"
   static String HOST = "localhost";
   static Integer PORT = 11434;
   static String url = String.format("http://%s:%d/api/generate/", HOST, PORT);
@@ -89,14 +89,14 @@ public class CodeBot {
     return answer;
   }
 
-  public static String commentOnClass(String definition, String methods) {
+  public static String commentOnClass(String definition) {
 
 
     String prompt = Config.classPrompt;
     String answer = "";
     while (answer.isEmpty()) {
       answer = model.generate(String.format(
-          prompt, definition, methods));
+          prompt, definition));
 
       doLog("Result of commentCode:\n" + answer);
 
@@ -122,13 +122,8 @@ public class CodeBot {
 
       // For classes without Javadoc
       if (clazz.getJavadocComment().isEmpty()) {
-        List<MethodDeclaration> methodList = clazz.getMethods();
-        String methods = methodList
-            .stream()
-            .map(m -> m.getDeclarationAsString(false, true, true))
-            .collect(Collectors.joining("\n"));
         
-        String javadoc = commentOnClass(clazz.getNameAsString(), methods);
+        String javadoc = commentOnClass(clazz.getNameAsString());
         clazz.setComment(new JavadocComment(javadoc).parse().toComment());
         doLog("Produced Javadoc:\n" + clazz.getComment().toString());
 

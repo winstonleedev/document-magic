@@ -7,12 +7,6 @@ Given the below Java class with the name below, delimited by <definition>:
 %s
 <definition>
 
-And list of its methods below, delimited by <methods>:
-
-<methods>
-%s
-<methods>
-
 Infer what the class is doing,
 Use that information to write Javadoc comment for the given class.
 Do not include any information about the class that is not already present in the code.
