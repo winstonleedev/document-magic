@@ -5,11 +5,9 @@ It automatically generates Javadoc for a Java project. It adds Javadoc to classe
 
 ## How to use
 - Install ollama on port 11434 (default ollama port)
-- Then run
-```
-mvn package
-mvn run <target directory>
-```
+- Pull the model `ollama pull codellama`
+- Then run `mvn package`
+- Run the jar with the path to your `src` directory as parameter
 
 We assume that you already have git on the target directory. This will allow you to review changes this application made before accepting them.
 
